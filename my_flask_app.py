@@ -4,9 +4,15 @@ import pandas as pd
 
 app = Flask(__name__)
 
-# Load the trained model
+# Load the trained models
 with open('model.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
+    linear_model = pickle.load(model_file)
+
+with open('rf_model.pkl', 'rb') as model_file:
+    rf_model = pickle.load(model_file)
+
+with open('svm_model.pkl', 'rb') as model_file:
+    svm_model = pickle.load(model_file)
 
 # Define the predict route
 @app.route('/predict', methods=['POST'])
@@ -15,13 +21,18 @@ def predict():
     data = request.json
     
     # Convert the input data to a DataFrame
-    input_data = pd.DataFrame(data, index=[0])  # Assuming data is a dictionary
+    input_data = pd.DataFrame(data, index=[0])
     
-    # Perform prediction using the trained model
-    prediction = model.predict(input_data)
+    # Predict using both models
+    linear_prediction = linear_model.predict(input_data)
+    rf_prediction = rf_model.predict(input_data)
+    svm_prediction = svm_model.predict(input_data)
+
+    # Calculate consensus prediction (average of predictions)
+    consensus_prediction = (linear_prediction + rf_prediction + svm_prediction) / 3
     
     # Format the response
-    response = {'prediction': prediction[0]}  # Assuming the prediction is a single value
+    response = {'consensus_prediction': consensus_prediction[0]}
     
     return jsonify(response)
 
