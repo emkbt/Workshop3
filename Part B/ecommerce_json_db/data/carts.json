@@ -1,0 +1,24 @@
+[
+    {
+      "userId": "user123",
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1
+        },
+        {
+          "productId": "4",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "userId": "user456",
+      "items": [
+        {
+          "productId": "3",
+          "quantity": 1
+        }
+      ]
+    }
+]  
