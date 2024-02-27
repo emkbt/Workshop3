@@ -3,8 +3,9 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR  # Add this import
+from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error
+from weighted_ensemble import WeightedEnsemble  
 
 # Step 1: Load and prepare the data
 housing_data = pd.read_csv('Housing.csv')  
@@ -36,23 +37,7 @@ rf_model.fit(X_train, y_train)
 svm_model = SVR()
 svm_model.fit(X_train, y_train)
 
-# Step 5: Evaluate the models
-# Linear Regression Model
-y_pred_linear = linear_model.predict(X_test)
-mse_linear = mean_squared_error(y_test, y_pred_linear)
-print("Mean Squared Error (Linear Regression):", mse_linear)
-
-# Random Forest Model
-y_pred_rf = rf_model.predict(X_test)
-mse_rf = mean_squared_error(y_test, y_pred_rf)
-print("Mean Squared Error (Random Forest):", mse_rf)
-
-# SVM Model
-y_pred_svm = svm_model.predict(X_test)
-mse_svm = mean_squared_error(y_test, y_pred_svm)
-print("Mean Squared Error (SVM):", mse_svm)
-
-# Step 6: Save the trained models
+# Step 5: Save the trained models
 with open('linear_model.pkl', 'wb') as linear_model_file:
     pickle.dump(linear_model, linear_model_file)
 
@@ -61,3 +46,13 @@ with open('rf_model.pkl', 'wb') as rf_model_file:
     
 with open('svm_model.pkl', 'wb') as svm_model_file:
     pickle.dump(svm_model, svm_model_file)
+
+# Step 6: Create a weighted ensemble
+weighted_ensemble = WeightedEnsemble([linear_model, rf_model, svm_model])
+
+# Step 7: Evaluate the ensemble's performance
+ensemble_error = weighted_ensemble.evaluate(X_test, y_test)
+print("Mean Squared Error (Ensemble):", ensemble_error)
+
+# Step 8: Adjust weights based on consensus
+weighted_ensemble.adjust_weights(X_test, y_test)
