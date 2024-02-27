@@ -2,11 +2,12 @@ import requests
 
 # Define the URL of the Flask app
 url = 'http://localhost:6000/predict'
+ngrok_url = 'https://645c-89-30-29-68.ngrok-free.app/predict'
 
 # Define the input data as a JSON object
 data = {
     'area': 7700,
-    'bedrooms': 3,
+    'bedrooms': 1,
     'bathrooms' : 2,
     'stories': 4,
     'parking' : 1,
@@ -29,7 +30,7 @@ data = {
 
 try:
     # Send the POST request with the input data
-    response = requests.post(url, json=data)
+    response = requests.post(ngrok_url, json=data)
 
     # Check if the response is successful
     if response.status_code == 200:
