@@ -1,34 +1,34 @@
 [
-    {
-      "id": "1",
-      "name": "Labrador Retriever",
-      "description": "Friendly, outgoing, and high-spirited, this breed is known for its good nature.",
-      "price": 800,
-      "category": "Retriever",
-      "inStock": true
-    },
-    {
-      "id": "2",
-      "name": "German Shepherd",
-      "description": "Confident, courageous, and smart, this breed is extremely faithful and obedient.",
-      "price": 1000,
-      "category": "Herding",
-      "inStock": false
-    },
-    {
-      "id": "3",
-      "name": "Golden Retriever",
-      "description": "Intelligent, friendly, and devoted, this breed is one of the most popular family dogs.",
-      "price": 900,
-      "category": "Retriever",
-      "inStock": true
-    },
-    {
-      "id": "4",
-      "name": "French Bulldog",
-      "description": "Adorable, affectionate, and playful, this breed is a great companion for city dwellers.",
-      "price": 1200,
-      "category": "Bulldog",
-      "inStock": true
-    }
-]  
+  {
+    "id": "1",
+    "name": "Labrador Retriever",
+    "description": "Friendly, outgoing, and high-spirited, this breed is known for its good nature.",
+    "price": 800,
+    "category": "Retriever",
+    "inStock": true
+  },
+  {
+    "id": "2",
+    "name": "German Shepherd",
+    "description": "Confident, courageous, and smart, this breed is extremely faithful and obedient.",
+    "price": 1000,
+    "category": "Herding",
+    "inStock": false
+  },
+  {
+    "id": "3",
+    "name": "Golden Retriever",
+    "description": "Intelligent, friendly, and devoted, this breed is one of the most popular family dogs.",
+    "price": 900,
+    "category": "Retriever",
+    "inStock": true
+  },
+  {
+    "id": "4",
+    "name": "French Bulldog",
+    "description": "Adorable, affectionate, and playful, this breed is a great companion for city dwellers.",
+    "price": 1200,
+    "category": "Bulldog",
+    "inStock": true
+  }
+]
