@@ -3,8 +3,8 @@
     "id": "1",
     "name": "Labrador Retriever",
     "description": "Friendly, outgoing, and high-spirited, this breed is known for its good nature.",
-    "price": 800,
-    "category": "Retriever",
+    "price": "800",
+    "category": "Retrieve",
     "inStock": true
   },
   {

@@ -1,14 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const fs = require('fs');
-
+const bodyParser = require('body-parser');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(bodyParser.json());
-app.use(express.static('public1'));
 
-// Function to read data from JSON file
 const readDataFromFile = (filename) => {
     try {
         return JSON.parse(fs.readFileSync(`./data/${filename}.json`));
@@ -18,7 +15,6 @@ const readDataFromFile = (filename) => {
     }
 };
 
-// Function to write data to JSON file
 const writeDataToFile = (filename, data) => {
     try {
         fs.writeFileSync(`./data/${filename}.json`, JSON.stringify(data, null, 2));
@@ -29,18 +25,25 @@ const writeDataToFile = (filename, data) => {
 
 // Products Routes
 app.get('/products', (req, res) => {
-    const products = readDataFromFile('products');
+    let products = readDataFromFile('products');
+    // Filter by category if provided in query params
+    if (req.query.category) {
+        products = products.filter(product => product.category === req.query.category);
+    }
+    // Filter by inStock if provided in query params
+    if (req.query.inStock) {
+        const inStock = req.query.inStock.toLowerCase() === 'true';
+        products = products.filter(product => product.inStock === inStock);
+    }
     res.json(products);
 });
 
 app.get('/products/:id', (req, res) => {
     const products = readDataFromFile('products');
     const product = products.find(product => product.id === req.params.id);
-
     if (!product) {
         return res.status(404).json({ error: 'Product not found' });
     }
-
     res.json(product);
 });
 
@@ -57,11 +60,9 @@ app.put('/products/:id', (req, res) => {
     const updatedProduct = req.body;
     let products = readDataFromFile('products');
     const index = products.findIndex(product => product.id === req.params.id);
-
     if (index === -1) {
         return res.status(404).json({ error: 'Product not found' });
     }
-
     products[index] = { ...products[index], ...updatedProduct };
     writeDataToFile('products', products);
     res.json(products[index]);
@@ -70,21 +71,20 @@ app.put('/products/:id', (req, res) => {
 app.delete('/products/:id', (req, res) => {
     let products = readDataFromFile('products');
     const index = products.findIndex(product => product.id === req.params.id);
-
     if (index === -1) {
         return res.status(404).json({ error: 'Product not found' });
     }
-
     products.splice(index, 1);
     writeDataToFile('products', products);
     res.json({ message: 'Product deleted successfully' });
 });
 
+
 // Orders Routes
 app.post('/orders', (req, res) => {
     const newOrder = req.body;
-    newOrder.orderId = Date.now().toString(); // Generate a unique order ID
-    let orders = readDataFromFile('orders');
+    newOrder.id = Date.now().toString(); // Generate a unique order ID
+    const orders = readDataFromFile('orders');
     orders.push(newOrder);
     writeDataToFile('orders', orders);
     res.json(newOrder);
@@ -97,46 +97,31 @@ app.get('/orders/:userId', (req, res) => {
     res.json(userOrders);
 });
 
+
 // Cart Routes
 app.post('/cart/:userId', (req, res) => {
     const { userId } = req.params;
     const { productId, quantity } = req.body;
-
-    // Read cart data
-    let carts = readDataFromFile('carts');
-
-    // Find user's cart or create a new one
+    let carts = readDataFromFile('cart');
     let cart = carts.find(cart => cart.userId === userId);
     if (!cart) {
         cart = { userId, items: [] };
         carts.push(cart);
     }
-
-    // Add item to cart or update quantity if already exists
     const existingItemIndex = cart.items.findIndex(item => item.productId === productId);
     if (existingItemIndex !== -1) {
         cart.items[existingItemIndex].quantity += quantity;
     } else {
         cart.items.push({ productId, quantity });
     }
-
-    // Write cart data
-    writeDataToFile('carts', carts);
-
-    // Return updated cart
+    writeDataToFile('cart', carts);
     res.json(cart);
 });
 
 app.get('/cart/:userId', (req, res) => {
     const { userId } = req.params;
-
-    // Read cart data
-    const carts = readDataFromFile('carts');
-
-    // Find user's cart
+    const carts = readDataFromFile('cart');
     const cart = carts.find(cart => cart.userId === userId);
-
-    // Return user's cart
     if (cart) {
         res.json(cart);
     } else {
@@ -146,31 +131,41 @@ app.get('/cart/:userId', (req, res) => {
 
 app.delete('/cart/:userId/item/:productId', (req, res) => {
     const { userId, productId } = req.params;
-
-    // Read cart data
-    let carts = readDataFromFile('carts');
-
-    // Find user's cart
+    let carts = readDataFromFile('cart');
     const cartIndex = carts.findIndex(cart => cart.userId === userId);
     if (cartIndex === -1) {
         return res.status(404).json({ error: 'Cart not found' });
     }
-
-    // Remove item from cart
     const cart = carts[cartIndex];
     const itemIndex = cart.items.findIndex(item => item.productId === productId);
     if (itemIndex !== -1) {
         cart.items.splice(itemIndex, 1);
     }
-
-    // Write cart data
-    writeDataToFile('carts', carts);
-
-    // Return updated cart
+    writeDataToFile('cart', carts);
     res.json(cart);
 });
 
-// Start the server
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/products.html', (req, res) => {
+    res.sendFile(__dirname + '/products.html');
+});
+
+app.get('/product-detail.html', (req, res) => {
+    res.sendFile(__dirname + '/product-detail.html');
+});
+
+app.get('/orders.html', (req, res) => {
+    res.sendFile(__dirname + '/orders.html');
+});
+
+app.get('/cart.html', (req, res) => {
+    res.sendFile(__dirname + '/cart.html');
+});
+
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`E-commerce running at http://localhost:${PORT}/`);
 });

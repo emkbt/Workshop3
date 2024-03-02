@@ -1,0 +1,35 @@
+[
+  {
+    "orderId": "12345",
+    "userId": "user123",
+    "products": [
+      {
+        "productId": "1",
+        "quantity": 2
+      },
+      {
+        "productId": "4",
+        "quantity": 1
+      }
+    ],
+    "totalPrice": 2600,
+    "status": "pending"
+  },
+  {
+    "orderId": "67890",
+    "userId": "user456",
+    "products": [
+      {
+        "productId": "3",
+        "quantity": 1
+      }
+    ],
+    "totalPrice": 900,
+    "status": "shipped"
+  },
+  {
+    "userId": "user123",
+    "products": "{\"id\":\"3\",\"name\":\"Golden Retriever\",\"description\":\"Intelligent, friendly, and devoted, this breed is one of the most popular family dogs.\",\"price\":900,\"category\":\"Retriever\",\"inStock\":true}",
+    "id": "1709421405926"
+  }
+]
